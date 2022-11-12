@@ -1,0 +1,14 @@
+
+<mat-card>
+    <button mat-raised-button color="accent">All</button>
+    <button mat-raised-button color="accent">Of</button>
+    <button mat-raised-button color="accent">The</button>
+    <button mat-raised-button color="accent">Buttons</button>
+</mat-card>
+
+<mat-card>
+    <ngx-monaco-editor [options]="editorOptions"
+                       [(ngModel)]="code" style="height:60em;"></ngx-monaco-editor>
+</mat-card>
+
+<button mat-button (click)="compile()">Compile</button>

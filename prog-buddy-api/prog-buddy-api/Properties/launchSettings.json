@@ -1,0 +1,14 @@
+{
+  "profiles": {
+    "prog_buddy_api": {
+      "commandName": "Project",
+      "commandLineArgs": "--port 7071"
+    },
+    "Docker": {
+      "commandName": "Docker",
+      "launchUrl": "{Scheme}://{ServiceHost}:{ServicePort}",
+      "httpPort": 31812,
+      "useSSL": false
+    }
+  }
+}
