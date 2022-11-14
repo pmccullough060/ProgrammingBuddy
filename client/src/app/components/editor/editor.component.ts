@@ -14,8 +14,8 @@ export class EditorComponent implements OnInit {
     private subscriptions: { [key: string ]: Subscription } = {}
 
     // temp props:
-    editorOptions = { theme: 'vs-dark', language: 'csharp' };
-    code: string = 'function x() {\nconsole.log("hello world");\n';
+    editorOptions = { theme: 'vs-dark', language: 'csharp', fontSize: "18px" };
+    code: string = 'public class Program \n{\n    public static void Main()\n    { \n    } \n}';
     
     ngOnInit(): void {}
 
@@ -26,7 +26,7 @@ export class EditorComponent implements OnInit {
             language: "csharp"
         }
 
-        this.subscriptions.compile = this.compilerService.compileCode(model).subscribe({next: (result: string) => {
+        this.subscriptions.compile = this.compilerService.compileCode(model).subscribe({next: (result) => {
             console.log(result);
         }})
     }

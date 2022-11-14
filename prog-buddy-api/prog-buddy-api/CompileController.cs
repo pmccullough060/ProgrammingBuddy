@@ -9,13 +9,15 @@ using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using prog_buddy_api.Models.Request;
 using prog_buddy_api.Services;
+using prog_buddy_api.Models.Compilation;
+using prog_buddy_api.Models.Response;
 
 namespace prog_buddy_api
 {
     public static class CompileController
     {
         [FunctionName("Compile")]
-        public static async Task<IActionResult> Run(
+        public static async Task<CompilationResponseModel> Run(
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "Compile")] HttpRequest req,
             ILogger log)
         {
@@ -35,7 +37,9 @@ namespace prog_buddy_api
                 method.Invoke(null, null);
             }
 
-            return new OkObjectResult("compilation result");
+            var codeEvaluationService = new CodeEvaluationService();
+
+            return codeEvaluationService.GetDiagnostics(result.Diagnostics);
         }
     }
 }
