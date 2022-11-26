@@ -8,7 +8,9 @@
 
 <mat-card>
     <ngx-monaco-editor [options]="editorOptions"
-                       [(ngModel)]="code" style="height:60em;"></ngx-monaco-editor>
+                       [(ngModel)]="code" 
+                       style="height:60em;"
+                       (onInit)="editorInit($event)"></ngx-monaco-editor>
 
     <button mat-raised-button color="primary" (click)="compile()">Compile</button>
 </mat-card>

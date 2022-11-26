@@ -39,7 +39,7 @@ namespace prog_buddy_api
 
             var codeEvaluationService = new CodeEvaluationService();
 
-            return codeEvaluationService.GetDiagnostics(result.Diagnostics);
+            return codeEvaluationService.GetDiagnostics(result);
         }
     }
 }

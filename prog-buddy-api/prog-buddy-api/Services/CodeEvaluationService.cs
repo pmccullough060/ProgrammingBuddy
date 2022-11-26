@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Internal;
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
+using Microsoft.CodeAnalysis.Text;
 using prog_buddy_api.Models.Compilation;
 using prog_buddy_api.Models.Response;
 using System;
@@ -12,13 +14,34 @@ namespace prog_buddy_api.Services
 {
     public class CodeEvaluationService
     {
-        public CompilationResponseModel GetDiagnostics(List<Diagnostic> diagnostics)
+        public CompilationResponseModel GetDiagnostics(CompilationResult result) =>
+            new()
+            {
+                DiagnosticResponseModels = result.Diagnostics.Select(diagnostic => new DiagnosticResponseModel 
+                { 
+                    Message = diagnostic.Id,
+                    Position = GetPosition(result.Root, diagnostic.Location.SourceSpan)
+                }).ToList()
+            };
+
+        // Get the line position for a given SyntaxNode and TextSpan:
+        public Position GetPosition(SyntaxNode node, TextSpan error)
         {
-            var result = new CompilationResponseModel();
+            var span = node.SyntaxTree.GetLineSpan(error);
 
-            result.DiagnosticResponseModels = diagnostics.Select(x => new DiagnosticResponseModel { Message = x.Id}).ToList();
+            return new Position 
+            { 
+                Line = span.StartLinePosition.Line + 1, // Line position is zero index:
+                Start = span.StartLinePosition.Character,
+                End = span.EndLinePosition.Character,
+            };
+        }
 
-            return result;
+        public void SyntaxEvaluation(SyntaxNode root)
+        {
+            var variableDeclarations = root.DescendantNodes().OfType<VariableDeclarationSyntax>();
+
+            var variableAssignments = root.DescendantNodes().OfType<AssignmentExpressionSyntax>();
         }
     }
 }

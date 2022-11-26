@@ -11,3 +11,9 @@ mat-card {
 .mat-raised-button ~ .mat-raised-button {
     margin-left: 10px;
 }
+
+.myLineDecoration {
+	background: lightblue;
+	width: 5px !important;
+	margin-left: 3px;
+}

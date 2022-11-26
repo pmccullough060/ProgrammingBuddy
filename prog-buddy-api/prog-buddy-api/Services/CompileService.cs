@@ -31,6 +31,9 @@ namespace prog_buddy_api.Services
                                    .AddSyntaxTrees(CSharpSyntaxTree
                                    .ParseText(code, new CSharpParseOptions(LanguageVersion.Preview)));
 
+            // Get the root syntax node:
+            var root = compilation.SyntaxTrees.First().GetRoot();
+
             // An error will prent a succesfully compilation:
             var diagnostics = compilation.GetDiagnostics().ToList();
 
@@ -42,20 +45,15 @@ namespace prog_buddy_api.Services
                 {
                     Success = false,
                     Assembly = null,
-                    Root = null,
+                    Root = root,
                     Diagnostics = diagnostics.ToList(),
                 };
             }
 
             using (var outputAssembly = new MemoryStream())
             {
+                // Output compilation result to the console:
                 compilation.Emit(outputAssembly);
-
-                var root = compilation.SyntaxTrees.First().GetRoot();
-
-                var variableDeclarations = root.DescendantNodes().OfType<VariableDeclarationSyntax>();
-
-                var variableAssignments = root.DescendantNodes().OfType<AssignmentExpressionSyntax>();
 
                 return new CompilationResult
                 {

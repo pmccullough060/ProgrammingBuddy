@@ -5,7 +5,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { EditorComponent } from './components/editor/editor.component';
+import { TextEditorComponent } from './components/editor/editor.component';
 import { NavBarComponent } from './components/nav-bar/nav-bar.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatCardModule } from '@angular/material/card';
@@ -16,13 +16,12 @@ import { MatIconModule } from '@angular/material/icon';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   baseUrl: './assets', // configure base path cotaining monaco-editor directory after build default: './assets'
-  defaultOptions: { scrollBeyondLastLine: true }, // pass default options to be used
-  onMonacoLoad: () => { console.log((<any>window).monaco); } // here monaco object will be available as window.monaco use this function to extend monaco editor functionalities.
+  defaultOptions: { scrollBeyondLastLine: true }, // pass default options to be used 
 };
 
 @NgModule({
   declarations: [
-    AppComponent, EditorComponent, NavBarComponent
+    AppComponent, TextEditorComponent, NavBarComponent
   ],
   imports: [
     BrowserModule,
