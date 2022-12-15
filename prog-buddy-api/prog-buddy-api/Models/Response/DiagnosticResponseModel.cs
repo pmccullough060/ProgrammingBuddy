@@ -12,5 +12,7 @@ namespace prog_buddy_api.Models.Response
         public string Message { get; set; }
 
         public Position Position { get; set; }
+
+        public string Url { get; set; }
     }
 }

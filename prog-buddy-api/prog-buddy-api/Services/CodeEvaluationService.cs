@@ -14,8 +14,9 @@ namespace prog_buddy_api.Services
             {
                 DiagnosticResponseModels = result.Diagnostics.Select(diagnostic => new DiagnosticResponseModel 
                 { 
-                    Message = diagnostic.Id,
-                    Position = GetPosition(result.Root, diagnostic.Location.SourceSpan)
+                    Message = diagnostic.GetMessage(),
+                    Position = GetPosition(result.Root, diagnostic.Location.SourceSpan),
+                    Url = diagnostic.Descriptor.HelpLinkUri,
                 }).ToList()
             };
 

@@ -1,9 +1,4 @@
-body {
-    margin: 0;
-    font-family: Roboto, sans-serif;
-}
-  
-mat-card {
+  mat-card {
     max-width: 80%;
     margin: 2em auto;
 }
@@ -12,8 +7,6 @@ mat-card {
     margin-left: 10px;
 }
 
-.myLineDecoration {
-	background: lightblue;
-	width: 5px !important;
-	margin-left: 3px;
+#container > div {
+    display: flex;
 }
