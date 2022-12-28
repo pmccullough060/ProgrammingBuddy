@@ -20,6 +20,14 @@ namespace prog_buddy_api
             [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "Compile")] HttpRequest req,
             ILogger log)
         {
+            // Check the JWT token:
+            var authenticated = AuthenticationService.ValidateJwtToken(req);
+
+            if (!authenticated)
+            {
+                // do something etc..
+            }
+
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
             var compileRequestModel = JsonConvert.DeserializeObject<CompileRequestModel>(requestBody);

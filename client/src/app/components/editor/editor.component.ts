@@ -138,6 +138,7 @@ export class TextEditorComponent implements OnInit {
         this.editor.trigger('keyboard', 'type', {text: text});
     }
 
+    // Ideally should be storing these in a .json config file:
     addVariable(){
         let text = 'int i = 0; //Assigning a value to a variable'
         this.typeAtCursor(text);
