@@ -15,13 +15,22 @@ using System.Text;
 using System.Threading.Tasks;
 using prog_buddy_api.Models.DTO;
 using prog_buddy_api.Enums;
+using Data;
+using User = prog_buddy_api.Models.DTO.User;
 
 namespace prog_buddy_api
 {
-    public static class AuthController
+    public class AuthController
     {
+        private readonly Context _context;
+
+        public AuthController(Context context)
+        {
+            _context = context;
+        }
+
         [FunctionName("Login")]
-        public static async Task<LoginResponseModel> Run(
+        public async Task<LoginResponseModel> Run(
         [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "Login")] HttpRequest req,
         ILogger log)
         {
