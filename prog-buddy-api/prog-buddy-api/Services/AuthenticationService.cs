@@ -4,14 +4,13 @@ using JWT.Builder;
 using JWT.Serializers;
 using Microsoft.AspNetCore.Http;
 using prog_buddy_api.Models.DTO;
-using System;
 using System.Collections.Generic;
 
 namespace prog_buddy_api.Services
 {
     public class AuthenticationService
     {
-        public static string IssueJwtToken(User user)
+        public static string IssueJwtToken(UserDTO user)
         {
             Dictionary<string, object> claims = new Dictionary<string, object>
             {

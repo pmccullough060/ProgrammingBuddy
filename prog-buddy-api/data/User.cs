@@ -8,6 +8,12 @@ namespace Data
 
         public string? Email { get; set; }
 
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
         public UserRoles Role { get; set; }
+
+        public PasswordHash? HashedPassword { get; set; }
     }
 }

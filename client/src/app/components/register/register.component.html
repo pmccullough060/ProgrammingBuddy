@@ -1,0 +1,76 @@
+<div class="form-container">
+    <mat-card class="register-card">
+
+        <!-- Header -->
+        <mat-card-header>
+            <mat-card-title>Register</mat-card-title>
+        </mat-card-header>
+
+       <!-- content -->
+        <mat-card-content>
+            <form [formGroup]="form">
+                
+                <!-- first name -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>First name</mat-label>
+                    <input type="name"
+                           matInput 
+                           formControlName="firstName">
+
+                    <mat-error *ngIf="form.get('firstName')?.errors?.required">
+                        Please provide your first name.
+                    </mat-error>
+  
+                </mat-form-field>
+
+                <!-- last name -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>Last name</mat-label>
+                    <input type="name"
+                           matInput 
+                           formControlName="firstName">
+                
+                    <mat-error *ngIf="form.get('lastName')?.errors?.required">
+                        Please provide your second name.
+                    </mat-error>
+                  
+                </mat-form-field>
+
+                <!-- email input -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>Email</mat-label>
+                    <input type="email" 
+                           matInput 
+                           formControlName="email">
+    
+                    <mat-error *ngIf="form.get('email')?.errors">
+                        Please enter a valid email address.
+                    </mat-error>
+
+                </mat-form-field>
+
+                <!-- password -->
+                <mat-form-field class="example-full-width">
+                    <mat-label>Password</mat-label>
+                    <input type="password"
+                           matInput 
+                           formControlName="password">
+        
+                    
+                    <mat-error *ngIf="form.get('password')?.errors?.required">
+                        Please provide your password.
+                    </mat-error>
+        
+                </mat-form-field>
+    
+      <div class="register-button">
+          <button mat-raised-button 
+                  color="primary" 
+                  (click)="login()">Register</button>
+      </div>
+  </form>
+       </mat-card-content>
+
+
+    </mat-card>
+</div>

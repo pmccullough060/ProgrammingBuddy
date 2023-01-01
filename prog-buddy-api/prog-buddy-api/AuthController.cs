@@ -14,9 +14,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using prog_buddy_api.Models.DTO;
-using prog_buddy_api.Enums;
 using Data;
-using User = prog_buddy_api.Models.DTO.User;
+using Microsoft.AspNetCore.Mvc;
+using prog_buddy_api.AuthHelpers;
+using Data.Enums;
 
 namespace prog_buddy_api
 {
@@ -30,28 +31,91 @@ namespace prog_buddy_api
         }
 
         [FunctionName("Login")]
-        public async Task<LoginResponseModel> Run(
-        [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "Login")] HttpRequest req,
-        ILogger log)
+        public async Task<IActionResult> Login(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "Login")] HttpRequest req, ILogger log)
         {
             string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
 
-            var compileRequestModel = JsonConvert.DeserializeObject<LoginRequestModel>(requestBody);
+            var loginRequestModel = JsonConvert.DeserializeObject<LoginRequestModel>(requestBody);
+
+            // Hash the password:
 
             // DB call to validate the user etc...
-            var user = new User
+            var user = new UserDTO
             {
-                UserName = compileRequestModel.Email,
+                UserName = loginRequestModel.Email,
                 Role = UserRoles.User,
             };
 
             var token = AuthenticationService.IssueJwtToken(user);
 
-            return new LoginResponseModel
+            var responseModel =  new LoginResponseModel
             {
                 Token = token,
                 Expiry = DateTime.Now,
             };
+
+            return new JsonResult(responseModel);
+        }
+
+        [FunctionName("Register")]
+        public async Task<IActionResult> Register(
+        [HttpTrigger(AuthorizationLevel.Anonymous, "put", "post", Route = "Register")] HttpRequest req, ILogger log)
+        {
+            string requestBody = await new StreamReader(req.Body).ReadToEndAsync();
+
+            var registerRequestModel = JsonConvert.DeserializeObject<RegisterRequestModel>(requestBody);
+
+            // Check that the email hasn't already been registered:
+            var emailAlreadyRegistered = _context.Users.Any(user => user.Email == registerRequestModel.Email.ToLower());
+
+            if (emailAlreadyRegistered)
+            {
+                return new ConflictObjectResult("This emial address has already been registered");
+            }
+
+            // TODO: Move this to the service layer!
+
+            // Hash the password and generate salt:
+
+            byte[] salt;
+
+            var hashedPassword = registerRequestModel.Password.HashPassword(out salt);
+
+            // Build the user entity and save to context:
+            var user = new User
+            {
+                Email = registerRequestModel.Email.ToLower(),
+                FirstName = registerRequestModel.FirstName,
+                LastName = registerRequestModel.LastName,
+                Role = UserRoles.User,
+                HashedPassword = new PasswordHash
+                {
+                    HashedPassword = hashedPassword,
+                    Salt = salt,
+                },
+            };
+
+            // Add the user to the database:
+            this._context.Users.Add(user);
+
+            // Issue a jwt token:
+            var userDTO = new UserDTO
+            {
+                UserName = registerRequestModel.Email,
+                Role = UserRoles.User,
+            };
+
+            // Issue a jet token with the response
+            var token = AuthenticationService.IssueJwtToken(userDTO);
+
+            var responseModel = new LoginResponseModel
+            {
+                Token = token,
+                Expiry = DateTime.Now,
+            };
+
+            return new JsonResult(responseModel);
         }
     }
 }

@@ -9,5 +9,7 @@ namespace Data
         { }
 
         public DbSet<User> Users { get; set; }
+
+        public DbSet<PasswordHash> PasswordHashes { get; set; }
     }
 }

@@ -1,6 +1,6 @@
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { MonacoEditorModule, NgxMonacoEditorConfig } from 'ngx-monaco-editor';
 import { AppRoutingModule } from './app-routing.module';
@@ -14,9 +14,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { LoginComponent } from './components/login/login.component';
-import {MatFormFieldModule } from '@angular/material/form-field';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthInterceptor } from './interceptors/authInterceptor';
+import { RegisterComponent } from './components/Register/register.component';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   baseUrl: './assets', // configure base path cotaining monaco-editor directory after build default: './assets'
@@ -25,7 +26,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent, TextEditorComponent, NavBarComponent, LoginComponent
+    AppComponent, TextEditorComponent, NavBarComponent, LoginComponent, RegisterComponent
   ],
   imports: [
     BrowserModule,
