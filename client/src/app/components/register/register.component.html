@@ -28,7 +28,7 @@
                     <mat-label>Last name</mat-label>
                     <input type="name"
                            matInput 
-                           formControlName="firstName">
+                           formControlName="lastName">
                 
                     <mat-error *ngIf="form.get('lastName')?.errors?.required">
                         Please provide your second name.
@@ -66,7 +66,7 @@
       <div class="register-button">
           <button mat-raised-button 
                   color="primary" 
-                  (click)="login()">Register</button>
+                  (click)="register()">Register</button>
       </div>
   </form>
        </mat-card-content>

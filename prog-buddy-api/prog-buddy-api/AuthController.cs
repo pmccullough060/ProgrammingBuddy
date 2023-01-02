@@ -8,16 +8,15 @@ using prog_buddy_api.Models.Request;
 using prog_buddy_api.Models.Response;
 using prog_buddy_api.Services;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using prog_buddy_api.Models.DTO;
 using Data;
 using Microsoft.AspNetCore.Mvc;
 using prog_buddy_api.AuthHelpers;
 using Data.Enums;
+using Microsoft.EntityFrameworkCore;
 
 namespace prog_buddy_api
 {
@@ -38,7 +37,18 @@ namespace prog_buddy_api
 
             var loginRequestModel = JsonConvert.DeserializeObject<LoginRequestModel>(requestBody);
 
+            // Check is there is an email associated with this account:
+            var existingUser = _context.Users.Include(user => user.HashedPassword)
+                                             .FirstOrDefault(user => user.Email == loginRequestModel.Email.ToLower());
+
+            if(existingUser is null)
+            {
+                return new UnauthorizedResult();
+            }
+
             // Hash the password:
+            var correctPassword = loginRequestModel.Password.VerifyPassword(existingUser.HashedPassword.HashedPassword, existingUser.HashedPassword.Salt);
+
 
             // DB call to validate the user etc...
             var user = new UserDTO
@@ -98,6 +108,9 @@ namespace prog_buddy_api
 
             // Add the user to the database:
             this._context.Users.Add(user);
+
+            // Persist the tracked changes to the db:
+            this._context.SaveChanges();
 
             // Issue a jwt token:
             var userDTO = new UserDTO

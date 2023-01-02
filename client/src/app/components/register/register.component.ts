@@ -24,25 +24,30 @@ export class RegisterComponent {
         });
     }
   
-    login() {
+    register() {
+
+        // Check if the form has errors:
+        if(this.form.errors){
+            console.log("form has errors");
+            return;
+        }
 
         // Get the form values:
         const val = this.form.value;
         
-        // If both filled request from server:
-        if (val.email && val.password) {
-            this.authService.login({
-                email: val.email,
-                password: val.password,
-            })
-            .subscribe({
-                next: (response: ILoginResponseModel) => {
-                    this.authService.setSession(response);
-            }
-                
-                //redirects to where you want to go - ideally home screen.
-                //this.router.navigateByUrl('/');
-            });
+        // Register the user:
+        this.authService.register({
+            email: val.email,
+            password: val.password,
+            firstName: val.firstName,
+            lastName: val.lastName
+        }).subscribe({
+            next: (response: ILoginResponseModel) => {
+                this.authService.setSession(response);
         }
+            
+            //redirects to where you want to go - ideally home screen.
+            //this.router.navigateByUrl('/');
+        });
     }
 }
