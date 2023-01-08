@@ -1,5 +1,5 @@
 import * as monaco from "monaco-editor";
-import { Component, Inject, OnInit } from "@angular/core";
+import { Component, Inject } from "@angular/core";
 import { Subscription } from "rxjs/internal/Subscription";
 import { ICompilationResponseModel } from "src/app/models/compilationResponseModel";
 import { ICompileRequestModel } from "src/app/models/compileRequestModel";
@@ -8,6 +8,8 @@ import { CompilerService } from "src/app/services/compiler.service";
 import { DOCUMENT } from "@angular/common";
 import { Position } from "monaco-editor";
 import { FormBuilder, FormGroup, Validators } from "@angular/forms";
+import { ProjectService } from "src/app/services/project.service";
+import { ISaveProjectRequestModel } from "src/app/models/saveProjectRequestModel";
 
 @Component({
     selector: 'app-editor',
@@ -20,8 +22,9 @@ export class TextEditorComponent {
     private subscriptions: { [key: string ]: Subscription } = {}
 
     constructor(private compilerService: CompilerService, 
-                        @Inject(DOCUMENT) document: Document, 
-                        private fb: FormBuilder) {
+                private projectService: ProjectService,
+                @Inject(DOCUMENT) document: Document, 
+                private fb: FormBuilder) {
         
         // Create the reactive form:
         this.form = this.fb.group({
@@ -64,10 +67,15 @@ export class TextEditorComponent {
 
         // Get the project name:
         const projectName = this.form.value.projectName;
-        
-        
 
-        console.log("here rahheheeh");
+        const model: ISaveProjectRequestModel = {
+            name: projectName,
+            source: this.code,
+        }
+
+        this.subscriptions.compile = this.projectService.saveProject(model).subscribe({next: (result) => {
+            console.log("saved");
+        }})
     }
 
     processResult(response: ICompilationResponseModel){

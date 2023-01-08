@@ -34,7 +34,7 @@ namespace prog_buddy_api.Services
         public static bool ValidateJwtToken(HttpRequest request)
         {
             // Check for a bearer token:
-            var authorizationHeader= request.HasAnAuthHeader();
+            var authorizationHeader= request.GetAuthHeader();
 
             if (authorizationHeader is null)
             {
@@ -48,10 +48,11 @@ namespace prog_buddy_api.Services
             {
                 if (authorizationHeader.StartsWith("Bearer"))
                 {
-                    authorizationHeader = authorizationHeader.Substring(7);
+                    authorizationHeader = authorizationHeader[7..];
                 }
 
                 // Validate the token and decode the claims.
+                // TODO: Move secret to configuration file.
                 claims = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret("12345").MustVerifySignature().Decode<IDictionary<string, object>>(authorizationHeader);
             }
             catch
@@ -68,7 +69,7 @@ namespace prog_buddy_api.Services
             return true;
         }
 
-        private static string HasAnAuthHeader(this HttpRequest request)
+        private static string GetAuthHeader(this HttpRequest request)
         {
             // Check if we have a header.
             if (!request.Headers.ContainsKey("Authorization"))
@@ -87,6 +88,30 @@ namespace prog_buddy_api.Services
             return authorizationHeader;
         }
 
+        // TODO: refactor class - a lot of redundancy here:
+        public static string GetUserName(this HttpRequest request)
+        {
+            // Check for a bearer token:
+            var authorizationHeader = request.GetAuthHeader();
 
+            if (authorizationHeader is null)
+            {
+                throw new Exception("No authorization header");
+            }
+
+            // Check if we can decode the header.
+            IDictionary<string, object> claims = null;
+
+            if (authorizationHeader.StartsWith("Bearer"))
+            {
+                authorizationHeader = authorizationHeader[7..];
+            }
+
+            // Validate the token and decode the claims.
+            // TODO: Move secret to configuration file.
+            claims = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret("12345").MustVerifySignature().Decode<IDictionary<string, object>>(authorizationHeader);
+
+            return (string)claims["username"];
+        }
     }
 }
