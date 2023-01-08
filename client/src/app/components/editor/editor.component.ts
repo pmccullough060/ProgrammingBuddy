@@ -7,18 +7,28 @@ import { IDiagnosticResponseModel } from "src/app/models/diagnosticResponseModel
 import { CompilerService } from "src/app/services/compiler.service";
 import { DOCUMENT } from "@angular/common";
 import { Position } from "monaco-editor";
+import { FormBuilder, FormGroup, Validators } from "@angular/forms";
 
 @Component({
     selector: 'app-editor',
     templateUrl: './editor.component.html',
     styleUrls: ['./editor.component.scss'],
 })
-export class TextEditorComponent implements OnInit {
-
-    constructor(private compilerService: CompilerService, @Inject(DOCUMENT) document: Document) {}
+export class TextEditorComponent {
+    form: FormGroup;
 
     private subscriptions: { [key: string ]: Subscription } = {}
 
+    constructor(private compilerService: CompilerService, 
+                        @Inject(DOCUMENT) document: Document, 
+                        private fb: FormBuilder) {
+        
+        // Create the reactive form:
+        this.form = this.fb.group({
+            projectName: ['', [Validators.required]]
+        })       
+    }
+    
     // Monaco props:
     editor: any;
     decorations: any = [];
@@ -43,6 +53,21 @@ export class TextEditorComponent implements OnInit {
         this.subscriptions.compile = this.compilerService.compileCode(model).subscribe({next: (result) => {
             this.processResult(result);
         }})
+    }
+
+    saveProject() : void {
+
+        // Check if the form has errors:
+        if(!this.form.valid){
+            return;
+        }
+
+        // Get the project name:
+        const projectName = this.form.value.projectName;
+        
+        
+
+        console.log("here rahheheeh");
     }
 
     processResult(response: ICompilationResponseModel){

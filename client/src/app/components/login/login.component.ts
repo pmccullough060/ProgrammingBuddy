@@ -16,10 +16,11 @@ export class LoginComponent {
                 private authService: AuthService, 
                 private router: Router) {
   
-    this.form = this.fb.group({
-        email: ['',[Validators.required, Validators.email]],
-        password: ['',Validators.required]
-        });
+        // Create the reactive form:
+        this.form = this.fb.group({
+            email: ['',[Validators.required, Validators.email]],
+            password: ['',Validators.required]
+            });
     }
   
     login() {

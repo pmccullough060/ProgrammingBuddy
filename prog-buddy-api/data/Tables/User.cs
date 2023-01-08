@@ -1,6 +1,6 @@
 ﻿using Data.Enums;
 
-namespace Data
+namespace Data.Tables
 {
     public class User
     {

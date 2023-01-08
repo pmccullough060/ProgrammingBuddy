@@ -8,6 +8,33 @@
 </mat-card>
 
 <mat-card>
+
+    <form [formGroup]="form">
+
+        <!-- email -->
+        <mat-form-field class="example-full-width">
+            <mat-label>Project name</mat-label>
+                <input type="name" 
+                       matInput 
+                       formControlName="projectName">
+                
+                <mat-error *ngIf="form.get('projectName')?.errors">
+                    Please provide a project name 
+                </mat-error>
+        </mat-form-field>
+
+        <!-- button -->
+        <div class="login-button">
+            <button mat-raised-button 
+                    color="primary" 
+                    (click)="saveProject()">Save project</button>
+        </div>
+
+    </form>
+
+</mat-card>
+
+<mat-card>
     <ngx-monaco-editor [options]="editorOptions"
                        [(ngModel)]="code" 
                        style="height:60em;"

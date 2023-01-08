@@ -17,7 +17,9 @@ import { LoginComponent } from './components/login/login.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { AuthInterceptor } from './interceptors/authInterceptor';
-import { RegisterComponent } from './components/Register/register.component';
+import { RegisterComponent } from './components/register/register.component';
+import { ProfileComponent } from './components/profile/profile.component';
+import { AuthenticatedUser } from './guards/AuthenticatedUser';
 
 const monacoConfig: NgxMonacoEditorConfig = {
   baseUrl: './assets', // configure base path cotaining monaco-editor directory after build default: './assets'
@@ -26,7 +28,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
 
 @NgModule({
   declarations: [
-    AppComponent, TextEditorComponent, NavBarComponent, LoginComponent, RegisterComponent
+    AppComponent, TextEditorComponent, NavBarComponent, LoginComponent, RegisterComponent, ProfileComponent
   ],
   imports: [
     BrowserModule,
@@ -48,7 +50,7 @@ const monacoConfig: NgxMonacoEditorConfig = {
     provide: HTTP_INTERCEPTORS,
     useClass: AuthInterceptor,
     multi: true
-  }],
+  }, AuthenticatedUser],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

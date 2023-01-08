@@ -17,8 +17,9 @@ using Microsoft.AspNetCore.Mvc;
 using prog_buddy_api.AuthHelpers;
 using Data.Enums;
 using Microsoft.EntityFrameworkCore;
+using Data.Tables;
 
-namespace prog_buddy_api
+namespace prog_buddy_api.Controllers
 {
     public class AuthController
     {
@@ -41,7 +42,7 @@ namespace prog_buddy_api
             var existingUser = _context.Users.Include(user => user.HashedPassword)
                                              .FirstOrDefault(user => user.Email == loginRequestModel.Email.ToLower());
 
-            if(existingUser is null)
+            if (existingUser is null)
             {
                 return new UnauthorizedResult();
             }
@@ -59,7 +60,7 @@ namespace prog_buddy_api
 
             var token = AuthenticationService.IssueJwtToken(user);
 
-            var responseModel =  new LoginResponseModel
+            var responseModel = new LoginResponseModel
             {
                 Token = token,
                 Expiry = DateTime.Now,
@@ -107,10 +108,10 @@ namespace prog_buddy_api
             };
 
             // Add the user to the database:
-            this._context.Users.Add(user);
+            _context.Users.Add(user);
 
             // Persist the tracked changes to the db:
-            this._context.SaveChanges();
+            _context.SaveChanges();
 
             // Issue a jwt token:
             var userDTO = new UserDTO

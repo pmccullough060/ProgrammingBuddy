@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using Data.Tables;
+using Microsoft.EntityFrameworkCore;
 
 namespace Data
 {
@@ -11,5 +12,7 @@ namespace Data
         public DbSet<User> Users { get; set; }
 
         public DbSet<PasswordHash> PasswordHashes { get; set; }
+
+        public DbSet<UserProject> UserProjects { get; set; }
     }
 }

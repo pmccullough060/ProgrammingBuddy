@@ -3,12 +3,14 @@ using JWT.Algorithms;
 using JWT.Builder;
 using JWT.Serializers;
 using Microsoft.AspNetCore.Http;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using prog_buddy_api.Models.DTO;
+using System;
 using System.Collections.Generic;
 
 namespace prog_buddy_api.Services
 {
-    public class AuthenticationService
+    public static class AuthenticationService
     {
         public static string IssueJwtToken(UserDTO user)
         {
@@ -31,20 +33,14 @@ namespace prog_buddy_api.Services
 
         public static bool ValidateJwtToken(HttpRequest request)
         {
-            // Check if we have a header.
-            if (!request.Headers.ContainsKey("Authorization"))
+            // Check for a bearer token:
+            var authorizationHeader= request.HasAnAuthHeader();
+
+            if (authorizationHeader is null)
             {
                 return false;
             }
-
-            string authorizationHeader = request.Headers["Authorization"];
-            
-            // Check if the value is empty.
-            if (string.IsNullOrEmpty(authorizationHeader))
-            {
-                return false;
-            }
-
+                
             // Check if we can decode the header.
             IDictionary<string, object> claims = null;
 
@@ -54,6 +50,7 @@ namespace prog_buddy_api.Services
                 {
                     authorizationHeader = authorizationHeader.Substring(7);
                 }
+
                 // Validate the token and decode the claims.
                 claims = new JwtBuilder().WithAlgorithm(new HMACSHA256Algorithm()).WithSecret("12345").MustVerifySignature().Decode<IDictionary<string, object>>(authorizationHeader);
             }
@@ -69,8 +66,27 @@ namespace prog_buddy_api.Services
             }
 
             return true;
-
-
         }
+
+        private static string HasAnAuthHeader(this HttpRequest request)
+        {
+            // Check if we have a header.
+            if (!request.Headers.ContainsKey("Authorization"))
+            {
+                return null;
+            }
+
+            string authorizationHeader = request.Headers["Authorization"];
+
+            // Check if the value is empty.
+            if (string.IsNullOrEmpty(authorizationHeader))
+            {
+                return null;
+            }
+
+            return authorizationHeader;
+        }
+
+
     }
 }

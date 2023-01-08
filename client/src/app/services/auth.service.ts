@@ -31,5 +31,8 @@ export class AuthService {
         return this.http.post<ILoginResponseModel>(`http://localhost:7071/api/Register`, model);
     }
 
-    // TODO: use dayjs to check date before etc. etc. for logged out status
+    authenticatedUser() : boolean {
+        // TODO: use dayjs to check date before etc. etc. for logged out status
+        return localStorage.getItem('token') != null;
+    }
 }

@@ -1,17 +1,16 @@
-.example-form {
-    min-width: 150px;
-    max-width: 500px;
-    width: 50%;
-  }
-  
-  .example-full-width {
-    width: 100%;
-  }
+.form-container {
+  display: flex;
+  justify-content: center;
+}
 
-  .login-card {
-    margin-top: 5em;
-  }
+.example-full-width {
+  width: 100%;
+}
 
-  .login-button {
-    margin-top: 2em;
-  }
+.login-card {
+  margin-top: 5em;
+}
+
+.login-button {
+  margin-top: 2em;
+}

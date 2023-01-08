@@ -11,7 +11,7 @@ using prog_buddy_api.Models.Request;
 using prog_buddy_api.Services;
 using prog_buddy_api.Models.Response;
 
-namespace prog_buddy_api
+namespace prog_buddy_api.Controllers
 {
     public static class CompileController
     {
