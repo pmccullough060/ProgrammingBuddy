@@ -1,10 +1,12 @@
 ﻿using Data.Enums;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.Tables
 {
     public class User
     {
-        public Guid Id { get; set; }
+        public Guid UserId { get; set; }
 
         public string? Email { get; set; }
 
@@ -14,6 +16,8 @@ namespace Data.Tables
 
         public UserRoles Role { get; set; }
 
-        public PasswordHash? HashedPassword { get; set; }
+        public PasswordHash PasswordHash { get; set; }
+
+        public List<UserProject> Projects { get; set; }
     }
 }

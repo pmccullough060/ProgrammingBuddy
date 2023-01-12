@@ -24,7 +24,7 @@ namespace Data.Migrations
 
             modelBuilder.Entity("Data.Tables.PasswordHash", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("PasswordHashId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -36,14 +36,20 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.HasKey("Id");
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("PasswordHashId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("PasswordHashes");
                 });
 
             modelBuilder.Entity("Data.Tables.User", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("UserId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -54,9 +60,6 @@ namespace Data.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid?>("HashedPasswordId")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<string>("LastName")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -64,16 +67,14 @@ namespace Data.Migrations
                     b.Property<int>("Role")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
-
-                    b.HasIndex("HashedPasswordId");
+                    b.HasKey("UserId");
 
                     b.ToTable("Users");
                 });
 
             modelBuilder.Entity("Data.Tables.UserProject", b =>
                 {
-                    b.Property<Guid>("Id")
+                    b.Property<Guid>("UserProjectId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
@@ -88,31 +89,41 @@ namespace Data.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uniqueidentifier");
 
-                    b.HasKey("Id");
+                    b.HasKey("UserProjectId");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("UserProjects");
                 });
 
-            modelBuilder.Entity("Data.Tables.User", b =>
+            modelBuilder.Entity("Data.Tables.PasswordHash", b =>
                 {
-                    b.HasOne("Data.Tables.PasswordHash", "HashedPassword")
-                        .WithMany()
-                        .HasForeignKey("HashedPasswordId");
+                    b.HasOne("Data.Tables.User", "User")
+                        .WithOne("HashedPassword")
+                        .HasForeignKey("Data.Tables.PasswordHash", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
-                    b.Navigation("HashedPassword");
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Data.Tables.UserProject", b =>
                 {
                     b.HasOne("Data.Tables.User", "User")
-                        .WithMany()
+                        .WithMany("Projects")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("User");
+                });
+
+            modelBuilder.Entity("Data.Tables.User", b =>
+                {
+                    b.Navigation("HashedPassword")
+                        .IsRequired();
+
+                    b.Navigation("Projects");
                 });
 #pragma warning restore 612, 618
         }

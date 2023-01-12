@@ -71,7 +71,7 @@ namespace prog_buddy_api.Controllers
             // Get the users name:
             var username = req.GetUserName();
 
-            var user = _context.Users.Include(user => user.HashedPassword)
+            var user = _context.Users.Include(user => user.PasswordHash)
                                      .FirstOrDefault(user => user.Email == username.ToLower());
 
             return new OkObjectResult("Project saved");

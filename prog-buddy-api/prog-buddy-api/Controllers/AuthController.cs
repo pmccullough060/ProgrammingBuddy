@@ -39,7 +39,7 @@ namespace prog_buddy_api.Controllers
             var loginRequestModel = JsonConvert.DeserializeObject<LoginRequestModel>(requestBody);
 
             // Check is there is an email associated with this account:
-            var existingUser = _context.Users.Include(user => user.HashedPassword)
+            var existingUser = _context.Users.Include(user => user.PasswordHash)
                                              .FirstOrDefault(user => user.Email == loginRequestModel.Email.ToLower());
 
             if (existingUser is null)
@@ -48,7 +48,7 @@ namespace prog_buddy_api.Controllers
             }
 
             // Hash the password:
-            var correctPassword = loginRequestModel.Password.VerifyPassword(existingUser.HashedPassword.HashedPassword, existingUser.HashedPassword.Salt);
+            var correctPassword = loginRequestModel.Password.VerifyPassword(existingUser.PasswordHash.HashedPassword, existingUser.PasswordHash.Salt);
 
 
             // DB call to validate the user etc...
@@ -100,7 +100,7 @@ namespace prog_buddy_api.Controllers
                 FirstName = registerRequestModel.FirstName,
                 LastName = registerRequestModel.LastName,
                 Role = UserRoles.User,
-                HashedPassword = new PasswordHash
+                PasswordHash = new PasswordHash
                 {
                     HashedPassword = hashedPassword,
                     Salt = salt,
